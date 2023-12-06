@@ -18,5 +18,5 @@ To run the code for a specific day:
 
 ```bash
 $ cd day-<number>
-$ cargo run -- part-<number>
+$ cargo run --bin part-<number>
 ```

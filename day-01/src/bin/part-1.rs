@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 use anyhow::Result;
-use tracing::{error, info, warn};
+use tracing::{info, warn};
 
 fn main() -> Result<()> {
     let lines = load_input("input.txt")?;
@@ -32,7 +32,7 @@ fn load_input(filename: &str) -> Result<Vec<String>> {
 fn find_all_digits_in_string(line: &str) -> Result<Vec<u32>> {
     let mut digits = Vec::new();
 
-    let mut cline = line.to_string();
+    let cline = line.to_string();
 
     for c in cline.chars() {
         match c.to_digit(10) {
