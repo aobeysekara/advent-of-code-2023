@@ -37,7 +37,6 @@ fn find_all_digits_in_string(line: &str) -> Result<Vec<u32>> {
     let chars = [
         "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "zero",
     ];
-    // let _chars = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 
     let mut locs = Vec::new();
 
@@ -48,20 +47,15 @@ fn find_all_digits_in_string(line: &str) -> Result<Vec<u32>> {
             let loc = line.find(c).unwrap();
             println!("Found {} at {}", c, loc);
 
-            // add c to index vector in order using loc
             digits.push(i as u32 + 1);
             locs.push(loc);
         }
     }
-    println!("Digits: {:?}", digits);
-    println!("Index: {:?}", locs);
 
     for c in line.chars() {
         match c.to_digit(10) {
-            // Some(d) => digits.push(d),
             Some(d) => {
                 digits.push(d);
-                // find location of d in line
                 let loc = line.find(c).unwrap();
                 locs.push(loc);
             }
@@ -70,19 +64,11 @@ fn find_all_digits_in_string(line: &str) -> Result<Vec<u32>> {
         }
     }
 
-    println!("Digits: {:?}", digits);
-    println!("Index: {:?}", locs);
-
-    // sort digits based on loc.sort()
-
-    // Create a vector of indices (0, 1, 2, ...) and sort it based on the numbers vector
     let mut indices: Vec<usize> = (0..digits.len()).collect();
     indices.sort_by_key(|&i| locs[i]);
-    println!("Indices: {:?}", indices);
+
     // Rearrange the strings vector based on the sorted indices
     let sorted: Vec<u32> = indices.iter().map(|&i| digits[i]).collect::<Vec<_>>();
-
-    println!("Sorted: {:?}", sorted);
 
     Ok(sorted)
 }
