@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-use anyhow::{Error, Result};
+use anyhow::{Result};
 use tracing::{info, warn};
 
 fn main() -> Result<()> {
@@ -32,9 +32,9 @@ fn load_input(filename: &str) -> Result<Vec<String>> {
 fn find_all_digits_in_string(line: &str) -> Result<Vec<u32>> {
     let mut digits = Vec::new();
 
-    let mut cline = line.to_string();
+    let _cline = line.to_string();
 
-    let mut chars = [
+    let chars = [
         "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "zero",
     ];
     // let _chars = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
