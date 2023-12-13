@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-use anyhow::Result;
+use anyhow::{Error, Result};
 use tracing::{info, warn};
 
 fn main() -> Result<()> {
@@ -9,7 +9,7 @@ fn main() -> Result<()> {
     let digits = lines.iter().map(|line| find_all_digits_in_string(line));
 
     let sum = digits
-        .map(|digits| sum_digits(&digits.unwrap()))
+        .map(|digits| collect_digits(&digits.unwrap()))
         .sum::<u32>();
     println!("Sum: {}", sum);
 
@@ -34,37 +34,62 @@ fn find_all_digits_in_string(line: &str) -> Result<Vec<u32>> {
 
     let mut cline = line.to_string();
 
-    let chars = [
+    let mut chars = [
         "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "zero",
     ];
-    let _chars = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+    // let _chars = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 
-    // convert string numbers to digits using chars
+    let mut locs = Vec::new();
 
-    for char in chars {
-        if line.contains(char) {
-            // replace string number with digit
-            cline = cline.replace(char, _chars[chars.iter().position(|&r| r == char).unwrap()]);
+    // if any of chars in cline replace with digit
+    for (i, &c) in chars.iter().enumerate() {
+        if line.contains(c) {
+            // get location of c in line
+            let loc = line.find(c).unwrap();
+            println!("Found {} at {}", c, loc);
+
+            // add c to index vector in order using loc
+            digits.push(i as u32 + 1);
+            locs.push(loc);
         }
     }
+    println!("Digits: {:?}", digits);
+    println!("Index: {:?}", locs);
 
-    for c in cline.chars() {
+    for c in line.chars() {
         match c.to_digit(10) {
             // Some(d) => digits.push(d),
             Some(d) => {
                 digits.push(d);
+                // find location of d in line
+                let loc = line.find(c).unwrap();
+                locs.push(loc);
             }
 
             None => warn!("Invalid digit: {}", c),
         }
     }
 
-    Ok(digits)
+    println!("Digits: {:?}", digits);
+    println!("Index: {:?}", locs);
+
+    // sort digits based on loc.sort()
+
+    // Create a vector of indices (0, 1, 2, ...) and sort it based on the numbers vector
+    let mut indices: Vec<usize> = (0..digits.len()).collect();
+    indices.sort_by_key(|&i| locs[i]);
+    println!("Indices: {:?}", indices);
+    // Rearrange the strings vector based on the sorted indices
+    let sorted: Vec<u32> = indices.iter().map(|&i| digits[i]).collect::<Vec<_>>();
+
+    println!("Sorted: {:?}", sorted);
+
+    Ok(sorted)
 }
 
 // sum first and last digit only
-fn sum_digits(digits: &Vec<u32>) -> u32 {
-    let mut sum: u32 = 0;
+fn collect_digits(digits: &Vec<u32>) -> u32 {
+    let sum: u32;
 
     match digits.len() {
         1 => sum = digits[0] * 11,
@@ -81,7 +106,7 @@ mod tests {
     #[test]
     fn test_sum_digits() {
         let digits = vec![1, 2, 3, 4, 5];
-        assert_eq!(sum_digits(&digits), 15);
+        assert_eq!(collect_digits(&digits), 15);
     }
 
     #[test]
@@ -94,15 +119,23 @@ mod tests {
 
     #[test]
     fn test_main() {
-        let lines = vec!["1abc2", "pqr3stu8vwx", "a1b2c3d4e5f", "treb7uchet"];
+        let lines = vec![
+            "two1nine",
+            "eightwothree",
+            "abcone2threexyz",
+            "xtwone3four",
+            "4nineeightseven2",
+            "zoneight234",
+            "7pqrstsixteen",
+        ];
 
         let digits = lines.iter().map(|line| find_all_digits_in_string(line));
 
         println!("Digits: {:?}", digits.clone().collect::<Vec<_>>());
         let sum = digits
-            .map(|digits| sum_digits(&digits.unwrap()))
+            .map(|digits| collect_digits(&digits.unwrap()))
             .sum::<u32>();
 
-        assert_eq!(sum, 142);
+        assert_eq!(sum, 281);
     }
 }

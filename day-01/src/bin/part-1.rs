@@ -9,7 +9,7 @@ fn main() -> Result<()> {
     let digits = lines.iter().map(|line| find_all_digits_in_string(line));
 
     let sum = digits
-        .map(|digits| sum_digits(&digits.unwrap()))
+        .map(|digits| collect_digits(&digits.unwrap()))
         .sum::<u32>();
     println!("Sum: {}", sum);
 
@@ -32,9 +32,7 @@ fn load_input(filename: &str) -> Result<Vec<String>> {
 fn find_all_digits_in_string(line: &str) -> Result<Vec<u32>> {
     let mut digits = Vec::new();
 
-    let cline = line.to_string();
-
-    for c in cline.chars() {
+    for c in line.chars() {
         match c.to_digit(10) {
             // Some(d) => digits.push(d),
             Some(d) => {
@@ -48,9 +46,9 @@ fn find_all_digits_in_string(line: &str) -> Result<Vec<u32>> {
     Ok(digits)
 }
 
-// sum first and last digit only
-fn sum_digits(digits: &Vec<u32>) -> u32 {
-    let mut sum: u32 = 0;
+// first and last digit only
+fn collect_digits(digits: &Vec<u32>) -> u32 {
+    let sum: u32;
 
     match digits.len() {
         1 => sum = digits[0] * 11,
@@ -67,7 +65,7 @@ mod tests {
     #[test]
     fn test_sum_digits() {
         let digits = vec![1, 2, 3, 4, 5];
-        assert_eq!(sum_digits(&digits), 15);
+        assert_eq!(collect_digits(&digits), 15);
     }
 
     #[test]
@@ -86,7 +84,7 @@ mod tests {
 
         println!("Digits: {:?}", digits.clone().collect::<Vec<_>>());
         let sum = digits
-            .map(|digits| sum_digits(&digits.unwrap()))
+            .map(|digits| collect_digits(&digits.unwrap()))
             .sum::<u32>();
 
         assert_eq!(sum, 142);
