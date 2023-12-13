@@ -8,7 +8,7 @@ This repository contains my solutions to the Advent of Code challenges implement
 Each day's challenge is placed in its respective directory in the format `day-<number>`. Inside each directory, you'll find:
 
 - `input.txt`: Input file containing the puzzle input for that specific day.
-- `src/main.rs`: Rust source file containing the solution code.
+- `src/bin/part-<number>.rs`: Rust source file containing the solution code.
 
 ## Running the Code
 
